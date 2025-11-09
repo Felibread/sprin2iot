@@ -1,0 +1,97 @@
+[
+  {
+    "id": "sensor_inject",
+    "type": "inject",
+    "z": "easyweather_flow",
+    "name": "Simular Sensor IoT",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "10",
+    "crontab": "",
+    "once": true,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 160,
+    "y": 100,
+    "wires": [
+      [
+        "generate_data"
+      ]
+    ]
+  },
+  {
+    "id": "generate_data",
+    "type": "function",
+    "z": "easyweather_flow",
+    "name": "Gerar Dados Climáticos",
+    "func": "msg.payload = {\n    temperatura: (20 + Math.random() * 10).toFixed(1),\n    umidade: (50 + Math.random() * 30).toFixed(1),\n    timestamp: new Date().toISOString()\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 390,
+    "y": 100,
+    "wires": [
+      [
+        "debug_data",
+        "send_apex"
+      ]
+    ]
+  },
+  {
+    "id": "debug_data",
+    "type": "debug",
+    "z": "easyweather_flow",
+    "name": "Exibir Dados no Debug",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 670,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "send_apex",
+    "type": "http request",
+    "z": "easyweather_flow",
+    "name": "Enviar ao Oracle APEX",
+    "method": "POST",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "https://seu-endpoint-apex.oraclecloud.com/easyweather/api",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 680,
+    "y": 140,
+    "wires": [
+      [
+        "debug_apex"
+      ]
+    ]
+  },
+  {
+    "id": "debug_apex",
+    "type": "debug",
+    "z": "easyweather_flow",
+    "name": "Resposta do APEX",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 910,
+    "y": 140,
+    "wires": []
+  }
+]
